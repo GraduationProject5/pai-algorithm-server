@@ -1,10 +1,11 @@
 import numpy as np
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.neighbors import KNeighborsClassifier
 
 X_train=np.array([[-7, -1,1], [-2, -1,1], [1, 1,1], [2, 1,1]])
 y_train=np.array([3, 3, 2, 6])
-lr = KNeighborsClassifier(n_neighbors=4)
+lr = RandomForestClassifier(n_estimators=10)
 re=lr.fit(X_train, y_train)
 
 #r = re.score(X_train,y_train)

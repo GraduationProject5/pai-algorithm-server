@@ -19,10 +19,12 @@ from django.urls import path
 from .service import svm_service
 from .service import logistic_regression_service
 from .service import knn_service
+from .service import random_forest_service
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^svm/$',svm_service.svm),
     url(r'^lr/$',logistic_regression_service.lr),
-    url(r'^knn/$',knn_service.knn)
+    url(r'^knn/$',knn_service.knn),
+    url(r'^rf/$',random_forest_service.rf)
 ]
