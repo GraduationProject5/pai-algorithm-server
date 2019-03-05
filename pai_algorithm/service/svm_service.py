@@ -1,6 +1,4 @@
 import json
-
-from django.contrib.sessions import serializers
 from sklearn import svm
 
 import numpy as np
