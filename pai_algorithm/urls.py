@@ -16,15 +16,31 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 from django.urls import path
-from .service import svm_service
-from .service import logistic_regression_service
-from .service import knn_service
-from .service import random_forest_service
-
+from .ml_service import svm_service
+from .ml_service import logistic_regression_service
+from .ml_service import knn_service
+from .ml_service import random_forest_service
+from .ml_service import gaussianNB_server
+from .ml_service import GBDT_service
+from .ml_service import linear_regression_server
+from .ml_service import GBDT_regression_server
+from .ml_service import KMeans_server
+from .ml_service import confusion_matrix_server
+from .evaluate_server import cluster_evaluation_server
+from .evaluate_server import regression_evaluation_server
 urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^svm/$',svm_service.svm),
     url(r'^lr/$',logistic_regression_service.lr),
     url(r'^knn/$',knn_service.knn),
-    url(r'^rf/$',random_forest_service.rf)
+    url(r'^rf/$',random_forest_service.rf),
+    url(r'^nb/$', gaussianNB_server.nb),
+    url(r'^GBDT/$', GBDT_service.gbdt),
+    url(r'^linear/$', linear_regression_server.linear),
+    url(r'^GBDT_regression/$', GBDT_regression_server.train),
+    url(r'^KMeans/$', KMeans_server.train),
+    url(r'^cm/$', confusion_matrix_server.train),
+    url(r'^ce/$', cluster_evaluation_server.value),
+    url(r'^re/$', regression_evaluation_server.value),
+
 ]
