@@ -16,18 +16,22 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 from django.urls import path
-from .ml_service import svm_service
-from .ml_service import logistic_regression_service
-from .ml_service import knn_service
-from .ml_service import random_forest_service
-from .ml_service import gaussianNB_server
-from .ml_service import GBDT_service
-from .ml_service import linear_regression_server
-from .ml_service import GBDT_regression_server
-from .ml_service import KMeans_server
-from .ml_service import confusion_matrix_server
+
+from pai_algorithm.evaluate_server import confusion_matrix_server
 from .evaluate_server import cluster_evaluation_server
 from .evaluate_server import regression_evaluation_server
+from .ml_service import GBDT_regression_server
+from .ml_service import GBDT_service
+from .ml_service import KMeans_server
+from .ml_service import gaussianNB_server
+from .ml_service import knn_service
+from .ml_service import linear_regression_server
+from .ml_service import logistic_regression_service
+from .ml_service import random_forest_service
+from .ml_service import svm_service
+from .evaluate_server import two_category_division_server
+from .evaluate_server import multy_category_division_server
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^svm/$',svm_service.svm),
@@ -42,5 +46,8 @@ urlpatterns = [
     url(r'^cm/$', confusion_matrix_server.train),
     url(r'^ce/$', cluster_evaluation_server.value),
     url(r'^re/$', regression_evaluation_server.value),
+    url(r'^tcd/$', two_category_division_server.value),
+    url(r'^mcd/$', multy_category_division_server.value),
+
 
 ]
