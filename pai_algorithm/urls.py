@@ -31,9 +31,6 @@ from .ml_service import random_forest_service
 from .ml_service import svm_service
 from .evaluate_server import two_category_division_server
 from .evaluate_server import multy_category_division_server
-from .text_server import participles_server
-from .text_server import stop_words_server
-from .text_server import kv_server
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -51,8 +48,6 @@ urlpatterns = [
     url(r'^re/$', regression_evaluation_server.value),
     url(r'^tcd/$', two_category_division_server.value),
     url(r'^mcd/$', multy_category_division_server.value),
-    url(r'^par/$',participles_server.operate),
-    url(r'^sw/$', stop_words_server.operate),
-    url(r'^kv/$', kv_server.operate),
+
 
 ]
