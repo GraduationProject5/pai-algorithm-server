@@ -35,6 +35,7 @@ from .pre import id_service
 from .pre import normalize_service
 from .pre import standard_service
 from .pre import randomForest_service
+from .pre import format_service
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -56,6 +57,6 @@ urlpatterns = [
     url(r'^normalize/$', normalize_service.normalize),
     url(r'^standard/$', standard_service.standard),
     url(r'^randomForest/$', randomForest_service.randomForest),
-
+    url(r'^format/$', format_service.format),
 
 ]
