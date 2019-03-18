@@ -38,7 +38,7 @@ from .pre import randomForest_service
 from .pre import format_service
 from .pre import dummy_service
 from .feature import PCA_service
-
+from .feature import scale_service
 urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^svm/$',svm_service.svm),
@@ -62,4 +62,5 @@ urlpatterns = [
     url(r'^format/$', format_service.format),
     url(r'^PCA/$', PCA_service.PCA_),
     url(r'^dummy/$', dummy_service.dummy),
+    url(r'^scale/$', scale_service.scale_),
 ]
