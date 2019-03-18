@@ -17,8 +17,7 @@ def setId(request):
         f = request.FILES.get("csv_file")
         filename=csv_util.upload(f)
         data_train=pd.read_csv(filename)
-        # 删除临时数据
-        os.remove(filename)
+
         # 增加id列
         count = len(data_train)
         list = []
