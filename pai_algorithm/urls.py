@@ -36,6 +36,7 @@ from .pre import normalize_service
 from .pre import standard_service
 from .pre import randomForest_service
 from .pre import format_service
+from .pre import dummy_service
 from .feature import PCA_service
 
 urlpatterns = [
@@ -60,4 +61,5 @@ urlpatterns = [
     url(r'^randomForest/$', randomForest_service.randomForest),
     url(r'^format/$', format_service.format),
     url(r'^PCA/$', PCA_service.PCA_),
+    url(r'^dummy/$', dummy_service.dummy),
 ]

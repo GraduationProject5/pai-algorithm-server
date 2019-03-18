@@ -18,13 +18,14 @@ def randomForest(request):
     f = request.FILES.get("csv_file")
     filename = csv_util.upload(f)
     data_train = pd.read_csv(filename)
-
+    os.remove(filename)
     # target是补全的目标列名
     target = request.POST['target']
     # ref是用来生成拟合值的相关项列表,格式是以逗号将各项隔开的字符串，如：SibSp,Pclass,Fare,Parch
     ref_str = request.POST['ref']
     ref = ref_str.split(',')
     ref.insert(0,target)#将target列名插入在ref最前面
+    print(ref)
     target_df=data_train[ref]#将这些列的数据都取出来
     #将数据分成已知目标项值和未知目标项值两部分
     known_data= target_df[target_df[target].notnull()].as_matrix()
@@ -46,6 +47,5 @@ def randomForest(request):
     response['Content-Type'] = 'application/octet-stream'
     response['Content-Disposition'] = 'attachment;filename="result.csv"'
     # 删除临时数据
-    os.remove(filename)
     os.remove(return_filename)
     return response
