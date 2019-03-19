@@ -10,6 +10,7 @@ import os
 import csv
 import uuid
 from pai_algorithm.pre import csv_util
+from pai_algorithm.pre import response_util
 # csv_file,target
 @csrf_exempt
 def normalize(request):
@@ -18,7 +19,7 @@ def normalize(request):
         f = request.FILES.get("csv_file")
         filename=csv_util.upload(f)
         data_train=pd.read_csv(filename)
-
+        os.remove(filename)
         #归一化目标列名
         target=request.POST['target']
         # 取出目标列数据
@@ -27,12 +28,6 @@ def normalize(request):
         mm_data = mm.fit_transform(target_df)  # 处理数据
         data_train.drop([target], axis=1, inplace=True)
         data_train[target] = mm_data
-        return_filename = csv_util.save(data_train)
-        response = HttpResponse(csv_util.file_iterator(return_filename))
-        response['Content-Type'] = 'application/octet-stream'
-        response['Content-Disposition'] = 'attachment;filename="result.csv"'
-        os.remove(filename)
-        os.remove(return_filename)
-        return response
+        return response_util.csv_info(data_train)
 
         # return HttpResponse(json.dumps(data_train.to_csv()), content_type="application/json")

@@ -10,6 +10,7 @@ import csv
 import uuid
 from pai_algorithm.pre import csv_util
 from sklearn.cluster import KMeans
+from pai_algorithm.pre import response_util
 # csv_file,target
 @csrf_exempt
 def discrete(request):
@@ -46,13 +47,5 @@ def discrete(request):
             w = [0] + list(w[0]) + [target_df.max()]  # 把首末边界点加上，首边界为0，末边界为data的最大值120000
             data_train[target] = pd.cut(target_df, w, labels=range(num))  # cut函数实现将data中的数据按照w的边界分类。
         else:
-            print('wrong')
-            result = {"status": 'wrong',
-                    "reason": '输入的方法不包含在frequency\metric\cluster里'}
-            return HttpResponse(json.dumps(result), content_type="application/json")
-        return_filename = csv_util.save(data_train)
-        response = HttpResponse(csv_util.file_iterator(return_filename))
-        response['Content-Type'] = 'application/octet-stream'
-        response['Content-Disposition'] = 'attachment;filename="result.csv"'
-        os.remove(return_filename)
-        return response
+            return response_util.wrong_info('输入的方法不包含在frequency/metric/cluster里')
+        return response_util.csv_info(data_train)

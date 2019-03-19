@@ -10,6 +10,7 @@ import os
 import csv
 import uuid
 from pai_algorithm.pre import csv_util
+from pai_algorithm.pre import response_util
 from sklearn.ensemble import RandomForestRegressor
 # csv_file,target,ref
 @csrf_exempt
@@ -42,10 +43,4 @@ def randomForest(request):
     # 用得到的预测结果填补原缺失数据
     data_train.loc[(data_train[target].isnull()), target] = predictedAges
 
-    return_filename = csv_util.save(data_train)
-    response = HttpResponse(csv_util.file_iterator(return_filename))
-    response['Content-Type'] = 'application/octet-stream'
-    response['Content-Disposition'] = 'attachment;filename="result.csv"'
-    # 删除临时数据
-    os.remove(return_filename)
-    return response
+    return response_util.csv_info(data_train)

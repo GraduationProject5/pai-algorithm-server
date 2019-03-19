@@ -10,6 +10,7 @@ import os
 import csv
 import uuid
 from pai_algorithm.pre import csv_util
+from pai_algorithm.pre import response_util
 # csv_file,target
 @csrf_exempt
 def scale_(request):
@@ -37,14 +38,5 @@ def scale_(request):
             elif scale == 'sqrt':
                 data_train[each] = np.sqrt(target_df)
             else:
-                print('wrong')
-                result = {"status": 'wrong',
-                          "reason": '输入的方法不包含在log2、log10、ln、abs、sqrt里'}
-                return HttpResponse(json.dumps(result), content_type="application/json")
-        print (data_train)
-        return_filename = csv_util.save(data_train)
-        response = HttpResponse(csv_util.file_iterator(return_filename))
-        response['Content-Type'] = 'application/octet-stream'
-        response['Content-Disposition'] = 'attachment;filename="result.csv"'
-        os.remove(return_filename)
-        return response
+                return response_util.wrong_info('输入的方法不包含在log2、log10、ln、abs、sqrt里')
+        return response_util.csv_info(data_train)

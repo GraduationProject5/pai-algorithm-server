@@ -10,6 +10,7 @@ import os
 import csv
 import uuid
 from pai_algorithm.pre import csv_util
+from pai_algorithm.pre import response_util
 @csrf_exempt
 def dummy(request):
     if "POST" == request.method:
@@ -25,9 +26,4 @@ def dummy(request):
             dummies = pd.get_dummies(data_train[each], prefix=each)
             data_train = pd.concat([data_train, dummies], axis=1)
             data_train.drop([each], axis=1, inplace=True)
-        return_filename = csv_util.save(data_train)
-        response = HttpResponse(csv_util.file_iterator(return_filename))
-        response['Content-Type'] = 'application/octet-stream'
-        response['Content-Disposition'] = 'attachment;filename="result.csv"'
-        os.remove(return_filename)
-        return response
+        return response_util.csv_info(data_train)
