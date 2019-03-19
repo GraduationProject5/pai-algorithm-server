@@ -39,6 +39,7 @@ from .pre import format_service
 from .pre import dummy_service
 from .feature import PCA_service
 from .feature import scale_service
+from .feature import discrete_service
 urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^svm/$',svm_service.svm),
@@ -63,4 +64,5 @@ urlpatterns = [
     url(r'^PCA/$', PCA_service.PCA_),
     url(r'^dummy/$', dummy_service.dummy),
     url(r'^scale/$', scale_service.scale_),
+    url(r'^discrete/$', discrete_service.discrete),
 ]
