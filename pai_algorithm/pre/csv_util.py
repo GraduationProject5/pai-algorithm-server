@@ -21,7 +21,7 @@ def save(file):
     uuid_str = uuid.uuid4().hex
     tmp_file_name = 'tmpfile_%s.csv' % uuid_str
     filename = os.path.join(csvDir, tmp_file_name)
-    pd.DataFrame.to_csv(file,filename,',')
+    pd.DataFrame.to_csv(file,filename,',',index=False)
     return filename
 
 # 返回csv文件时用于写入文件流的函数

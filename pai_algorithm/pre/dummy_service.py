@@ -11,25 +11,19 @@ import csv
 import uuid
 from pai_algorithm.pre import csv_util
 from pai_algorithm.pre import response_util
-# 将数据转换为x_train,y_train形式
-# csv_file为上传的数据文件，flag是作为标签的数据列名
 @csrf_exempt
-def format(request):
+def dummy(request):
     if "POST" == request.method:
         # 获取数据
         f = request.FILES.get("csv_file")
         filename=csv_util.upload(f)
         data_train=pd.read_csv(filename)
         os.remove(filename)
-        # flag是作为标签的属性名
-        flag = request.POST['flag']
-
-        y_train=data_train[flag].values.tolist()
-        x_train=data_train.drop(flag, 1).values.tolist()
-
-        print(x_train)
-        print(y_train)
-
-        result = {"X_train": x_train,
-                  "Y_train": y_train}
-        return HttpResponse(json.dumps(result), content_type="application/json")
+        # target_str为需要因子化的列名,以逗号隔开，例：cabin,sex,pclass
+        target_str = request.POST['target']
+        target = target_str.split(',')
+        for each in target:
+            dummies = pd.get_dummies(data_train[each], prefix=each)
+            data_train = pd.concat([data_train, dummies], axis=1)
+            data_train.drop([each], axis=1, inplace=True)
+        return response_util.csv_info(data_train)

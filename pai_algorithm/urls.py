@@ -31,10 +31,11 @@ from .ml_service import random_forest_service
 from .ml_service import svm_service
 from .evaluate_server import two_category_division_server
 from .evaluate_server import multy_category_division_server
-from .text_server import participles_server
-from .text_server import stop_words_server
-from .text_server import kv_server
-from .text_server import lda_server
+from .pre import id_service
+from .pre import normalize_service
+from .pre import standard_service
+from .pre import randomForest_service
+from .pre import format_service
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -52,11 +53,10 @@ urlpatterns = [
     url(r'^re/$', regression_evaluation_server.value),
     url(r'^tcd/$', two_category_division_server.value),
     url(r'^mcd/$', multy_category_division_server.value),
-    url(r'^par/$',participles_server.operate),
-    url(r'^sw/$', stop_words_server.operate),
-    url(r'^kv/$', kv_server.operate),
-    url(r'^lda/$', lda_server.lda),
-
-
+    url(r'^setId/$', id_service.setId),
+    url(r'^normalize/$', normalize_service.normalize),
+    url(r'^standard/$', standard_service.standard),
+    url(r'^randomForest/$', randomForest_service.randomForest),
+    url(r'^format/$', format_service.format),
 
 ]
