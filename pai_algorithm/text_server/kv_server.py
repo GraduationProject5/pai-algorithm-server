@@ -42,16 +42,12 @@ def operate(request):
 
         count=count+1;
 
-
-
     print(words)
 
 
     result = {"kvs": kvs,
               "word_list":words
               }
-
-
 
 
     return HttpResponse(json.dumps(result), content_type="application/json")
