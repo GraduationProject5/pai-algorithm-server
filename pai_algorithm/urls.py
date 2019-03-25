@@ -36,6 +36,10 @@ from .pre import normalize_service
 from .pre import standard_service
 from .pre import randomForest_service
 from .pre import format_service
+from .text_server import participles_server
+from .text_server import stop_words_server
+from .text_server import kv_server
+from .text_server import lda_server
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -58,5 +62,9 @@ urlpatterns = [
     url(r'^standard/$', standard_service.standard),
     url(r'^randomForest/$', randomForest_service.randomForest),
     url(r'^format/$', format_service.format),
+    url(r'^par/$', participles_server.operate),
+    url(r'^sw/$', stop_words_server.operate),
+    url(r'^kv/$', kv_server.operate),
+    url(r'^lda/$', lda_server.lda),
 
 ]
