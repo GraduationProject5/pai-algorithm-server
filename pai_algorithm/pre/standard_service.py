@@ -20,10 +20,11 @@ def standard(request):
     data_train = pd.read_csv(filename)
     os.remove(filename)
     # target是标准化的目标列名
-    target = request.POST['target']
-    target_df=data_train[target] #取出目标列数据
+    target_str = request.POST['target']
+    target = target_str.split(',')
     scaler = preprocessing.StandardScaler()
-    standard_data = scaler.fit_transform(data_train[target])
-    data_train.drop([target],axis=1,inplace=True)
-    data_train[target] = standard_data
+    for each in target:
+        standard_data = scaler.fit_transform(data_train[each])
+        data_train.drop([each], axis=1, inplace=True)
+        data_train[each] = standard_data
     return response_util.csv_info(data_train)

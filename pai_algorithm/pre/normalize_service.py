@@ -23,11 +23,13 @@ def normalize(request):
         #归一化目标列名
         target=request.POST['target']
         # 取出目标列数据
-        target_df = data_train[target]
         mm = preprocessing.MinMaxScaler()  # 归一化
-        mm_data = mm.fit_transform(target_df)  # 处理数据
-        data_train.drop([target], axis=1, inplace=True)
-        data_train[target] = mm_data
+        target_str = request.POST['target']
+        target = target_str.split(',')
+        for each in target:
+            mm_data = mm.fit_transform(data_train[each])  # 处理数据
+            data_train.drop([each], axis=1, inplace=True)
+            data_train[each] = mm_data
         return response_util.csv_info(data_train)
 
         # return HttpResponse(json.dumps(data_train.to_csv()), content_type="application/json")
