@@ -24,7 +24,7 @@ def standard(request):
     target = target_str.split(',')
     scaler = preprocessing.StandardScaler()
     for each in target:
-        standard_data = scaler.fit_transform(data_train[each])
+        standard_data = scaler.fit_transform(data_train[each].values.reshape(-1,1))
         data_train.drop([each], axis=1, inplace=True)
         data_train[each] = standard_data
     return response_util.csv_info(data_train)
