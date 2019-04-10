@@ -9,7 +9,7 @@ csvDir = os.path.join(baseDir, 'static')
 def upload(post_file):
     uuid_str = uuid.uuid4().hex
     tmp_file_name = 'tmpfile_%s.csv' % uuid_str
-    filename = os.path.join(csvDir, tmp_file_name)
+    filename = os.path.join('static', tmp_file_name)
     fobj = open(filename, 'wb')
     for chrunk in post_file.chunks():
         fobj.write(chrunk)
