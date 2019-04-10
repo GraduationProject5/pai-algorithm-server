@@ -27,7 +27,7 @@ def normalize(request):
         target_str = request.POST['target']
         target = target_str.split(',')
         for each in target:
-            mm_data = mm.fit_transform(data_train[each])  # 处理数据
+            mm_data = mm.fit_transform(data_train[each].values.reshape(-1,1))  # 处理数据
             data_train.drop([each], axis=1, inplace=True)
             data_train[each] = mm_data
         return response_util.csv_info(data_train)
