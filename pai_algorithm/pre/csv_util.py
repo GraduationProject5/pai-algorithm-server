@@ -3,7 +3,7 @@ import csv
 import uuid
 import pandas as pd #数据分析
 baseDir = os.path.dirname(os.path.abspath(__name__))
-csvDir = os.path.join(baseDir, 'static', 'csv')
+csvDir = os.path.join(baseDir, 'static')
 
 # post_file为通过django接收的csv文件
 def upload(post_file):
