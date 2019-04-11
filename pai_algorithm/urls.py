@@ -43,10 +43,14 @@ from .text_server import kv_server
 from .text_server import lda_server
 from .feature import discrete_service
 from .feature import importance_service
+from .feature import importance_filter
 from .feature import PCA_service
 from .feature import scale_service
 from .feature import soften_service
 from .feature import GDBT_importance_service
+from .feature import GDBT_filter
+from .pic import create_dir
+from .pic import create_exp
 urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^svm/$',svm_service.svm),
@@ -75,8 +79,12 @@ urlpatterns = [
     url(r'^lda/$', lda_server.lda),
     url(r'^discrete/$', discrete_service.discrete),
     url(r'^importance/$', importance_service.importance),
+    url(r'^importance_filter/$', importance_filter.importance_filter),
     url(r'^PCA/$', PCA_service.PCA_),
     url(r'^scale/$', scale_service.scale_),
     url(r'^soften/$', soften_service.soften),
     url(r'^GDBT_importance/$', GDBT_importance_service.gdbt_importance),
+    url(r'^GDBT_filter/$', GDBT_filter.filter),
+    url(r'^create_exp/$', create_exp.create_exp),
+    url(r'^create_train_dir/$', create_dir.create_train_dir),
 ]
