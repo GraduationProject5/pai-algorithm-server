@@ -37,5 +37,5 @@ def format(request):
         else:
             x_train=data_train.drop(label, 1).values.tolist()
             result = {"X_train": x_train,
-                      "Y_train": y_train}
+                      "y_train": y_train}
             return HttpResponse(json.dumps(result), content_type="application/json")

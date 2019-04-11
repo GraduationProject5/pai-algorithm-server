@@ -10,6 +10,11 @@ def wrong_info(info):
             'reason':info}
     return HttpResponse(json.dumps(result), content_type="application/json")
 
+def success_info(info):
+    result={'status':'success',
+            'reason':info}
+    return HttpResponse(json.dumps(result), content_type="application/json")
+
 def csv_info(data):
     return_filename = csv_util.save(data)
     response = HttpResponse(csv_util.file_iterator(return_filename))

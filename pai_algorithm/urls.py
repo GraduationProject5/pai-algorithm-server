@@ -37,6 +37,7 @@ from .pre import standard_service
 from .pre import randomForest_service
 from .pre import format_service
 from .pre import dummy_service
+from .pre import data_split
 from .text_server import participles_server
 from .text_server import stop_words_server
 from .text_server import kv_server
@@ -51,6 +52,7 @@ from .feature import GDBT_importance_service
 from .feature import GDBT_filter
 from .pic import create_dir
 from .pic import create_exp
+from .pic import upload
 urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^svm/$',svm_service.svm),
@@ -73,6 +75,7 @@ urlpatterns = [
     url(r'^randomForest/$', randomForest_service.randomForest),
     url(r'^format/$', format_service.format),
     url(r'^dummy/$', dummy_service.dummy),
+    url(r'^split/$', data_split.split),
     url(r'^par/$', participles_server.operate),
     url(r'^sw/$', stop_words_server.operate),
     url(r'^kv/$', kv_server.operate),
@@ -87,4 +90,5 @@ urlpatterns = [
     url(r'^GDBT_filter/$', GDBT_filter.filter),
     url(r'^create_exp/$', create_exp.create_exp),
     url(r'^create_train_dir/$', create_dir.create_train_dir),
+    url(r'^upload_pics/$', upload.upload),
 ]
