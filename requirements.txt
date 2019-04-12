@@ -54,4 +54,4 @@ Keras-Applications==1.0.6
 Keras-Preprocessing==1.0.5
 opencv-python==4.1.0.25
 tensorboard==1.12.2
-tensorflow==2.0.0a0
+tensorflow==1.12.0
