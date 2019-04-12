@@ -53,6 +53,7 @@ from .feature import GDBT_filter
 from .pic import create_dir
 from .pic import create_exp
 from .pic import upload
+from .pic import train
 urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^svm/$',svm_service.svm),
@@ -91,4 +92,5 @@ urlpatterns = [
     url(r'^create_exp/$', create_exp.create_exp),
     url(r'^create_train_dir/$', create_dir.create_train_dir),
     url(r'^upload_pics/$', upload.upload),
+    url(r'^pic_train/$', train.train),
 ]
