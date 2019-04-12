@@ -93,6 +93,7 @@ numexpr==2.6.2
 numpy==1.15.4
 numpydoc==0.6.0
 odo==0.5.0
+opencv==3.4.2
 olefile==0.44
 openpyxl==2.4.7
 packaging==16.8
