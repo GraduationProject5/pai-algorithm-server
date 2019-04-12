@@ -71,7 +71,6 @@ Keras-Applications==1.0.6
 Keras-Preprocessing==1.0.5
 lazy-object-proxy==1.2.2
 llvmlite==0.18.0
-libopencv==3.4.2
 locket==0.2.0
 lxml==3.7.3
 Markdown==3.0.1
@@ -95,7 +94,7 @@ numpy==1.15.4
 numpydoc==0.6.0
 odo==0.5.0
 olefile==0.44
-opencv==3.4.2
+opencv-python==4.1.0.25
 openpyxl==2.4.7
 packaging==16.8
 pandas==0.20.1
@@ -112,7 +111,6 @@ prompt-toolkit==1.0.14
 protobuf==3.6.1
 psutil==5.2.2
 py==1.4.33
-py-opencv==3.4.2
 pycosat==0.6.3
 pycparser==2.17
 pycrypto==2.6.1
