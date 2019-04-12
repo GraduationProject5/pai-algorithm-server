@@ -3,6 +3,7 @@ import json
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 import numpy as np #科学计算
+import random
 @csrf_exempt
 def split(request):
     postBody = request.body
