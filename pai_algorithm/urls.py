@@ -92,5 +92,5 @@ urlpatterns = [
     url(r'^create_exp/$', create_exp.create_exp),
     url(r'^create_train_dir/$', create_dir.create_train_dir),
     url(r'^upload_pics/$', upload.upload),
-    url(r'^pic_train/$', train.train),
+    # url(r'^pic_train/$', train.train),
 ]
