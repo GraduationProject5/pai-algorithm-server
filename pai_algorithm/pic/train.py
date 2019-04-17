@@ -84,8 +84,8 @@ class Dataset:
             self.input_shape = (img_rows, img_cols, img_channels)
 
         # 输出训练集和测试集的数量
-        print(train_images.shape[0], 'train samples')
-        print(test_images.shape[0], 'test samples')
+        # print(train_images.shape[0], 'train samples')
+        # print(test_images.shape[0], 'test samples')
 
         # 后面模型中会使用categorical_crossentropy作为损失函数，这里要对类别标签进行One-hot编码
         train_labels = keras.utils.to_categorical(train_labels, nb_classes)
