@@ -56,6 +56,8 @@ Werkzeug = "*"
 Keras = "*"
 Keras-Applications = "*"
 Keras-Preprocessing = "*"
+celery = "*"
+django-celery = "*"
 
 [requires]
 python_version = "3.7"

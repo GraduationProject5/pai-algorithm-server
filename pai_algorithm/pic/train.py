@@ -23,13 +23,20 @@ def train(request):
     epoach=int(request.POST.get('epoach',15))
     #batch大小。默认64
     batch=int(request.POST.get('batch',64))
+    #用户定义的神经网络模型，如果没有则设为默认'default'
+    #默认模型实际上就是这个输入：
+    # "64,3,3;Activation,relu;Conv,64,3,3;Activation,relu;MaxPooling2D,2,2;Conv,64,3,3;Activation,relu;
+    # Conv,64,3,3;Activation,relu;MaxPooling2D,2,2;Dropout,0.25;Dense,512;Activation,relu;Dropout,0.25"
+    #
+    input_model=request.POST.get('input_model','default')
+    t_optimizer=request.POST.get('optimizer','ADAM')
     file_dir=os.path.join('static', username, exp_name)
 
     model = Model()
     data = Dataset(file_dir)
     data.load(img_channels=3)
-    model.build_model(dataset=data,nb_classes=data.nb_classes)
-    history=model.train(dataset=data,batch_size=batch,nb_epoch=epoach)
+    model.build_model(dataset=data,nb_classes=data.nb_classes,input_model=input_model)
+    history=model.train(dataset=data,batch_size=batch,nb_epoch=epoach,t_optimizer=t_optimizer)
     test_result=model.evaluate(dataset=data)
 
     result={
@@ -107,41 +114,81 @@ class Model:
     def __init__(self):
         self.model = None
     # 建立模型,nb_classes为类别数目
-    def build_model(self, dataset,nb_classes):
-        self.model = Sequential()
-        self.model.add(Conv2D(32, (3, 3), padding = 'same', input_shape = dataset.input_shape)) # 当使用该层作为模型第一层时，需要提供 input_shape 参数 （整数元组，不包含batch_size）
-        self.model.add(Activation('relu'))
-        self.model.add(Conv2D(32, (3, 3)))
-        self.model.add(Activation('relu'))
-        self.model.add(MaxPooling2D(pool_size = (2,2))) # strides默认等于pool_size
-        self.model.add(Conv2D(64, (3, 3), padding = 'same'))
-        self.model.add(Activation('relu'))
-        self.model.add(Conv2D(64, (3, 3)))
-        self.model.add(Activation('relu'))
-        self.model.add(MaxPooling2D(pool_size = (2,2)))
-        self.model.add(Dropout(0.25))
-        self.model.add(Flatten())
-        self.model.add(Dense(512))
-        self.model.add(Activation('relu'))
-        self.model.add(Dropout(0.25))
-        self.model.add(Dense(nb_classes))
-        self.model.add(Activation('softmax'))
+    def build_model(self, dataset, nb_classes,input_model):
+        if input_model == 'default':
+            self.model = Sequential()
+            self.model.add(Conv2D(64, (3, 3), padding='same',
+                                  input_shape=dataset.input_shape))  # 当使用该层作为模型第一层时，需要提供 input_shape 参数 （整数元组，不包含batch_size）
+            self.model.add(Activation('relu'))
+            self.model.add(Conv2D(64, (3, 3)))
+            self.model.add(Activation('relu'))
+            self.model.add(MaxPooling2D(pool_size=(2, 2)))  # strides默认等于pool_size
+            self.model.add(Conv2D(64, (3, 3), padding='same'))
+            self.model.add(Activation('relu'))
+            self.model.add(Conv2D(64, (3, 3)))
+            self.model.add(Activation('relu'))
+            self.model.add(MaxPooling2D(pool_size=(2, 2)))
+            self.model.add(Dropout(0.25))
+            self.model.add(Flatten())
+            self.model.add(Dense(512))
+            self.model.add(Activation('relu'))
+            self.model.add(Dropout(0.25))
+            self.model.add(Dense(nb_classes))
+            self.model.add(Activation('softmax'))
+        else:
+            # 第一层被限制为卷积层
+            models = input_model.split(';')
+            str1 = models[0]
+            first_layer = str1.split(',')
+            self.model = Sequential()
+            self.model.add(Conv2D(int(first_layer[0]), (int(first_layer[1]), int(first_layer[2])), padding='same',
+                                  input_shape=dataset.input_shape))
+            i = 1
+            next_layer = models[i].split(',')
+            while next_layer[0] != 'Dense':
+                if next_layer[0] == 'Conv':
+                    self.model.add(Conv2D(int(next_layer[1]), (int(next_layer[2]), int(next_layer[3]))))
+                    i = i + 1
+                elif next_layer[0] == 'Activation':
+                    self.model.add(Activation(next_layer[1]))
+                    i = i + 1
+                elif next_layer[0] == 'MaxPooling2D':
+                    self.model.add(MaxPooling2D(pool_size=(int(next_layer[1]), int(next_layer[2]))))
+                    i = i + 1
+                elif next_layer[0] == 'Dropout':
+                    self.model.add(Dropout(float(next_layer[1])))
+                    i = i + 1
+                next_layer = models[i].split(',')
+            # 后面开始都是全连接层
+            self.model.add(Flatten())
+            while i < len(models):
+                next_layer = models[i].split(',')
+                if next_layer[0] == 'Dense':
+                    self.model.add(Dense(int(next_layer[1])))
+                    i = i + 1
+                elif next_layer[0] == 'Activation':
+                    self.model.add(Activation(next_layer[1]))
+                    i = i + 1
+                elif next_layer[0] == 'Dropout':
+                    self.model.add(Dropout(float(next_layer[1])))
+                    i = i + 1
+            self.model.add(Dense(nb_classes))
+            self.model.add(Activation('softmax'))
 
 # 训练模型
-    def train(self, dataset, batch_size = 64, nb_epoch = 15, data_augmentation = False):
+    def train(self, dataset, batch_size = 64, nb_epoch = 15, data_augmentation = False,t_optimizer='ADAM'):
         # https://jovianlin.io/cat-crossentropy-vs-sparse-cat-crossentropy/
         # If your targets are one-hot encoded, use categorical_crossentropy, if your targets are integers, use sparse_categorical_crossentropy.
         self.model.compile(loss = 'categorical_crossentropy',
-                           optimizer = 'ADAM',
+                           optimizer = t_optimizer,
                            metrics = ['accuracy'])
 
-        if not data_augmentation:
+        if data_augmentation==False:
             history=self.model.fit(dataset.train_images,
                            dataset.train_labels,
                            batch_size = batch_size,
                            epochs = nb_epoch,
-                           shuffle = True,
-                            verbose=0)
+                           shuffle = True)
         # 图像预处理
         else:
             #是否使输入数据去中心化（均值为0），是否使输入数据的每个样本均值为0，是否数据标准化（输入数据除以数据集的标准差），是否将每个样本数据除以自身的标准差，是否对输入数据施以ZCA白化，数据提升时图片随机转动的角度(这里的范围为0～20)，数据提升时图片水平偏移的幅度（单位为图片宽度的占比，0~1之间的浮点数），和rotation一样在0~0.2之间随机取值，同上，只不过这里是垂直，随机水平翻转，不是对所有图片翻转，随机垂直翻转，同上
