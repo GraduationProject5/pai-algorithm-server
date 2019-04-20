@@ -50,11 +50,8 @@ from .feature import scale_service
 from .feature import soften_service
 from .feature import GDBT_importance_service
 from .feature import GDBT_filter
-from .pic import create_dir
-from .pic import create_exp
-from .pic import upload
-from .pic import train
-from  .pic import train_result
+from pai.pic import train, create_dir, create_exp, upload, train_result
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^svm/$',svm_service.svm),

@@ -1,49 +1,32 @@
-import json
-import os
-from django.http import HttpResponse
-from pai_algorithm.pre import response_util
-import uuid
-import tensorflow as tf
+from __future__ import absolute_import
+from celery import shared_task
+from pai.pic import train_result
 import random
 import keras
-from django.views.decorators.csrf import csrf_protect, csrf_exempt
 from sklearn.model_selection import train_test_split
 from keras.preprocessing.image import ImageDataGenerator
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Activation, Flatten, Conv2D, MaxPooling2D
 from keras import backend as K
-from pai_algorithm.pic.load_dataset import load_dataset, resize_image
-
+from pai.pic.load_dataset import load_dataset
 IMAGE_SIZE=64
-@csrf_exempt
-def train(request):
-    username = request.POST['username']
-    exp_name = request.POST['exp_name']
-    #训练批次，默认15
-    epoach=int(request.POST.get('epoach',15))
-    #batch大小。默认64
-    batch=int(request.POST.get('batch',64))
-    #用户定义的神经网络模型，如果没有则设为默认'default'
-    #默认模型实际上就是这个输入：
-    # "64,3,3;Activation,relu;Conv,64,3,3;Activation,relu;MaxPooling2D,2,2;Conv,64,3,3;Activation,relu;
-    # Conv,64,3,3;Activation,relu;MaxPooling2D,2,2;Dropout,0.25;Dense,512;Activation,relu;Dropout,0.25"
-    #
-    input_model=request.POST.get('input_model','default')
-    t_optimizer=request.POST.get('optimizer','ADAM')
-    file_dir=os.path.join('static', username, exp_name)
-
+#异步训练模型
+@shared_task
+def start_train(epoach,batch,input_model,t_optimizer,file_dir,task_id):
+    print("start train")
     model = Model()
     data = Dataset(file_dir)
     data.load(img_channels=3)
-    model.build_model(dataset=data,nb_classes=data.nb_classes,input_model=input_model)
-    history=model.train(dataset=data,batch_size=batch,nb_epoch=epoach,t_optimizer=t_optimizer)
-    test_result=model.evaluate(dataset=data)
-
-    result={
-        'history':history.history,
-        'test':test_result
+    model.build_model(dataset=data, nb_classes=data.nb_classes, input_model=input_model)
+    history = model.train(dataset=data, batch_size=batch, nb_epoch=epoach, t_optimizer=t_optimizer)
+    test_result = model.evaluate(dataset=data)
+    result = {
+        'history': history.history,
+        'test': test_result
     }
-    return HttpResponse(json.dumps(result), content_type="application/json")
+    train_result.update_result(task_id, result)
+    print("end train")
+    return result
 
 class Dataset:
     # http://www.runoob.com/python3/python3-class.html
